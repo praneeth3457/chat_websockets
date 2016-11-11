@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>IO Chat</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+	<style>
+		body{
+			margin: 30px;
+		}
+		.users{
+			list-style: none;
+		}
+		.msgPanel{
+			overflow-y: scroll;
+		}
+		#messagesPanel{
+			height: 500px;
+			width: 500px;
+		}
+		.neg{
+			color: red;
+		}
+	</style>
+</head>
+<body class="container" ng-app="ioApp" ng-controller="mainController as main">
+	<div class="row">
+		<div class="col-xs-4">
+			<div class="well">
+				<h4><b>ONLINE USERS : {{main.users.length}}</b></h4>
+				<ul class="list-group" id="users">
+					<li class="users" ng-repeat="user in main.users" style="color: {{user.color}};"><h5><b>{{user.user}}</b></h5></li>
+				</ul>
+			</div>
+		</div>
+		<div class="col-xs-8">
+			<div class="name" ng-if="main.showChat == false">
+				<div class="neg" ng-if="main.checkName == false">Username already in online. Please select other username!</div>
+				<label>Enter Name</label>
+				<input type="text" class="form-control" ng-model="main.name"/><br/>
+				<submit class="btn btn-primary " ng-click="main.join(main.name)">Join</submit>
+			</div>
+
+			<div class="chat" id="chat" ng-if="main.showChat == true">
+				<form id="messageForm">
+					<label>Enter Message</label>
+					<textarea class="form-control" id="message" ng-model="main.message" ng-keypress="main.keyPressMsg($event, main.message);">
+					</textarea>
+					<br/>
+					<input type="submit" class="btn btn-primary" ng-click="main.messageSubmit(main.message);">
+				</form>
+				<br/>
+				<div class="panel panel-default msgPanel">
+				  <div class="panel-body" id="messagesPanel">
+				  </div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+	var app = angular.module('ioApp', []);
+
+	app.controller('mainController', function($scope){
+	var socket = io.connect();
+	var $chat = $('#chat');
+	var messages = [];
+	this.showChat = false;
+	this.name ='';
+	this.color = '';
+	main = this;
+
+	this.join = function(name) {
+		this.name = name;
+		socket.emit('add user', this.name);
+		main.showChat = true;
+		main.user = name;
+	}
+
+	this.messageSubmit = function(message) {
+		if(message != '') {
+			socket.emit('send message', {person: this.name, msg : message});
+			this.message = '';
+		}
+	}
+	this.keyPressMsg = function(e, message) {
+		if(e.keyCode == 13 && message != '') {
+			this.messageSubmit(message);
+		}
+	}
+
+
+	socket.on('new message', function(data){
+		var myEl = angular.element(document.querySelector('#messagesPanel'));
+		myEl.append('<div><strong style="color: ' + data.color + ';">' + data.data.person + '</strong> : ' + data.data.msg + '</div><br/>');   
+	});
+
+	socket.on('get users', function(users){
+		main.users = users;
+		$scope.$apply();
+	});
+
+	/*main.checkName = true;
+	socket.on('already user', function(data){
+		main.checkName = data.status;
+		$scope.$apply();
+		if(data.status == false) {
+			if(main.user == data.user){
+				main.showChat = false;
+			}
+		}
+	});*/
+});
+	</script>
+</body>
+</html>
