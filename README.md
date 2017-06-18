@@ -6,6 +6,11 @@ This is a chat application, Where users can get registered by his/her name & sta
 
 For application : https://praneeth-chat.herokuapp.com/ 
 
+## technologies used in this application
+
+Frontend : Angular 1.5, Bootstrap, CSS, HTML, Javascript
+Backend : Node.js, Websockets, Express Server
+
 ## clone the application to your local
 
 git clone git@github.com:praneeth3457/chat_websockets.git
