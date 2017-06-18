@@ -1,5 +1,9 @@
 # chat_websockets
 
+## About
+
+This is a chat application, Where users can get registered by his/her name & start sending the messages between each other. Any number of users can chat at the same time.
+
 For application : https://praneeth-chat.herokuapp.com/ 
 
 ## clone the application to your local
