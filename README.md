@@ -8,8 +8,8 @@ For application : https://praneeth-chat.herokuapp.com/
 
 ## technologies used in this application
 
-Frontend : Angular 1.5, Bootstrap, CSS, HTML, Javascript
-Backend : Node.js, Websockets, Express Server
+### Frontend : Angular 1.5, Bootstrap, CSS, HTML, Javascript
+### Backend : Node.js, Websockets, Express Server
 
 ## clone the application to your local
 
