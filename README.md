@@ -2,15 +2,15 @@
 
 For application : https://praneeth-chat.herokuapp.com/ 
 
-# Clone the application to your local
+## Clone the application to your local
 
-git clone 
+git clone git@github.com:praneeth3457/chat_websockets.git
 
-# Install Dependencies
+## Install Dependencies
 
 npm install
 
-# Run the application
+## Run the application
 
 node server
  
